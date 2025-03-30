@@ -24,9 +24,17 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          # Only install if requirements.txt is not empty
           if [ -s requirements.txt ]; then pip install -r requirements.txt; fi
 
+      - name: Print Working Directory and Structure
+        run: |
+          echo "Current Working Directory:"
+          pwd
+          echo "Directory Structure:"
+          tree -f
+
       - name: Run Tests
+        env:
+          PYTHONPATH: ./src  # Correctly set the Python path to include src
         run: |
           python -m unittest discover -s tests -p "test_*.py"
