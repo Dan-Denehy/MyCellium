@@ -26,15 +26,13 @@ jobs:
           python -m pip install --upgrade pip
           if [ -s requirements.txt ]; then pip install -r requirements.txt; fi
 
-      - name: Print Working Directory and Structure
+      - name: Install xvfb
         run: |
-          echo "Current Working Directory:"
-          pwd
-          echo "Directory Structure:"
-          tree -f
+          sudo apt-get update
+          sudo apt-get install -y xvfb
 
-      - name: Run Tests
+      - name: Run Tests with xvfb
         env:
-          PYTHONPATH: ./src  # Correctly set the Python path to include src
+          PYTHONPATH: ./src
         run: |
-          python -m unittest discover -s tests -p "test_*.py"
+          xvfb-run -a python -m unittest discover -s tests -p "test_*.py"
