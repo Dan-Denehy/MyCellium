@@ -24,7 +24,8 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          # Only install if requirements.txt is not empty
+          if [ -s requirements.txt ]; then pip install -r requirements.txt; fi
 
       - name: Run Tests
         run: |

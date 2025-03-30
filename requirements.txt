@@ -1,2 +1,4 @@
-tk
-unittest
+# requirements.txt
+
+# If you have any third-party libraries, list them here.
+# For now, leave this file empty as tkinter and unittest are built-in.
