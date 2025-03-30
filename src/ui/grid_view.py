@@ -166,13 +166,14 @@ class GridView:
             display = arithmetic_function(value, gridView=self)
             #Todo
             # fix loading csv with functions
-            if "Error" in display:
+            if isinstance(display, str):
                 display = "#NAME?"
             self.cells[row][col].set_display_value(display)
             print(f"Displaying Cell({row}, {col}) to '{display}'")
             entry.insert(0, display)
 
         else:
+            print(f"not a function, displaying '{value}'")
             self.cells[row][col].set_display_value(value)
 
     def get_cell_value(self, row, col):
