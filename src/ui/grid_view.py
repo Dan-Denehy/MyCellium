@@ -2,6 +2,7 @@ import tkinter as tk
 from core.cell import Cell
 from config.settings import HEADER_BG_COLOR, HEADER_TEXT_COLOR, CELL_FONT, HEADER_FONT, CELL_WIDTH
 from ui.menu import copy_content, cut_content, paste_content
+from core.formula_parser import *
 
 
 
@@ -107,7 +108,6 @@ class GridView:
 
     def start_editing(self, row, col):
         """Start editing the cell only when double-clicked."""
-        print(f"Double-clicked to edit cell({row}, {col})")
         if self.active_entry:
             r, c = self.active_entry
             entry_widget = self.frame.grid_slaves(row=r + 1, column=c + 1)[0]
@@ -115,7 +115,6 @@ class GridView:
             # Enable the Entry for editing and set focus
             entry_widget.config(state="normal")
             entry_widget.focus_set()
-            print(f"Editing Cell({r}, {c})")
 
     def stop_editing(self, event, row=None, col=None):
         """Stop editing the active cell when clicking outside or switching cells."""
@@ -146,9 +145,21 @@ class GridView:
     def update_cell(self, row, col, value):
         self.cells[row][col].set_value(value)
         print(f"Updated Cell({row}, {col}) to '{value}'")
+        if check_function(value):
+            display = arithmetic_function(value, gridView=self)
+            self.cells[row][col].set_display_value(display)
+            print(f"Displaying Cell({row}, {col}) to '{display}'")
+        else:
+            self.cells[row][col].set_display_value(value)
 
     def get_cell_value(self, row, col):
         """Return the value of the cell at the given row and column."""
         if 0 <= row < self.rows and 0 <= col < self.cols:
             return self.cells[row][col].get_value()
+        return None
+
+    def get_cell_display_value(self, row, col):
+        """Return the display value of the cell at the given row and column."""
+        if 0 <= row < self.rows and 0 <= col < self.cols:
+            return self.cells[row][col].get_display_value()
         return None
