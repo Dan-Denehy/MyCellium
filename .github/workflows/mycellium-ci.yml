@@ -3,10 +3,10 @@ name: MyCellium CI
 on:
   push:
     branches:
-      - v0-setup
+      - '*'
   pull_request:
     branches:
-      - v0-setup
+      - '*'
 
 jobs:
   test:
