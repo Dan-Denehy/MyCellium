@@ -62,8 +62,10 @@ class GridView:
                     self.frame, width=CELL_WIDTH, justify="center", relief="ridge", font=CELL_FONT,
                     borderwidth=1, highlightthickness=1, highlightbackground="black"
                 )
+
+
                 entry.grid(row=row + 1, column=col + 1, padx=0, pady=0, sticky="nsew")
-                entry.insert(0, cell.get_value())
+                entry.insert(0, cell.get_display_value())
                 entry.bind("<FocusIn>", lambda e, r=row, c=col: self.set_active_entry(r, c))
                 entry.bind("<Return>", lambda e, r=row, c=col, ent=entry: self.update_cell(r, c, ent.get()))
                 entry.bind("<FocusOut>", lambda e, r=row, c=col: self.stop_editing(e, r, c))
@@ -91,7 +93,7 @@ class GridView:
                                    borderwidth=1, state="readonly", readonlybackground="white")
 
         # Print the selected cell and value
-        print(f"Selected Cell({row}, {col}) with value: '{self.cells[row][col].get_value()}'")
+        print(f"Selected Cell({row}, {col}) with value: '{self.cells[row][col].get_display_value()}'")
         self.flash_border()
 
     def flash_border(self):
@@ -110,11 +112,16 @@ class GridView:
         """Start editing the cell only when double-clicked."""
         if self.active_entry:
             r, c = self.active_entry
-            entry_widget = self.frame.grid_slaves(row=r + 1, column=c + 1)[0]
+            if not self.cells[r][c].is_editing:
+                self.cells[r][c].is_editing = True
+                entry_widget = self.frame.grid_slaves(row=r + 1, column=c + 1)[0]
 
-            # Enable the Entry for editing and set focus
-            entry_widget.config(state="normal")
-            entry_widget.focus_set()
+
+                # Enable the Entry for editing and set focus
+                entry_widget.config(state="normal")
+                entry_widget.delete(0, tk.END)
+                entry_widget.insert(0, self.cells[r][c].get_value())
+                entry_widget.focus_set()
 
     def stop_editing(self, event, row=None, col=None):
         """Stop editing the active cell when clicking outside or switching cells."""
@@ -130,8 +137,16 @@ class GridView:
                     self.selected_entry.after_cancel(self.flash_id)
 
                 # Reset the border color and width to normal when losing focus
+
+                ent = tk.Entry()
+                current = entry_widget.get()
+                entry_widget.delete(0, tk.END)
+                self.cells[row][col].set_display_value(current)
+                entry_widget.insert(0, self.cells[row][col].get_display_value())
+
                 entry_widget.config(highlightbackground=FLASH_COLOR_2, highlightcolor=FLASH_COLOR_2, relief="ridge", borderwidth=1, state="readonly", readonlybackground="white")
 
+                self.cells[row][col].is_editing = False
                 # Update the cell value
                 self.update_cell(self.active_entry[0], self.active_entry[1], entry_widget.get())
 
@@ -144,11 +159,15 @@ class GridView:
 
     def update_cell(self, row, col, value):
         self.cells[row][col].set_value(value)
-        print(f"Updated Cell({row}, {col}) to '{value}'")
         if check_function(value):
+            entry = self.frame.grid_slaves(row=self.active_entry[0] + 1, column=self.active_entry[1] + 1)[0]
+            entry.config(state="normal")
+            entry.delete(0, tk.END)
             display = arithmetic_function(value, gridView=self)
             self.cells[row][col].set_display_value(display)
             print(f"Displaying Cell({row}, {col}) to '{display}'")
+            entry.insert(0, display)
+
         else:
             self.cells[row][col].set_display_value(value)
 

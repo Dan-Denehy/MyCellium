@@ -4,6 +4,7 @@ class Cell:
         self.col = col
         self.value = value
         self.display_value = value
+        self.is_editing = False
 
     def set_value(self, new_value):
         self.value = new_value
@@ -17,5 +18,14 @@ class Cell:
     def get_display_value(self):
         return self.display_value
 
+    def set_editing(self, is_editing):
+        """Set the editing flag."""
+        self.is_editing = is_editing
+
+    def is_in_edit_mode(self):
+        """Check if the cell is currently being edited."""
+        return self.is_editing
+
     def __repr__(self):
-        return f"Cell({self.row}, {self.col}, '{self.value}')"
+        return f"Cell({self.row}, {self.col}, '{self.value}', '{self.display_value}')"
+

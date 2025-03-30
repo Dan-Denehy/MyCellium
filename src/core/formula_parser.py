@@ -45,18 +45,7 @@ def cell_to_row_col(cell):
     return row_index, col_index
 
 
-# Example usage:
-cell = "A1"
-row, col = cell_to_row_col(cell)
-print(f"Cell {cell} is at row {row}, column {col}")  # Output: Cell A1 is at row 0, column 0
 
-cell = "F1"
-row, col = cell_to_row_col(cell)
-print(f"Cell {cell} is at row {row}, column {col}")  # Output: Cell F1 is at row 0, column 5
-
-cell = "AA100"
-row, col = cell_to_row_col(cell)
-print(f"Cell {cell} is at row {row}, column {col}")  # Output: Cell AA100 is at row 99, column 26
 
 
 def evaluate_expression(expression, gridView):
