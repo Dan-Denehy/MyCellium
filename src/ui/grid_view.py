@@ -46,7 +46,7 @@ class GridView:
         # Create row headers (1, 2, 3, ...)
         for row in range(self.rows):
             header = tk.Entry(
-                self.frame, width=CELL_WIDTH, justify="center", relief="ridge",
+                self.frame, width=CELL_WIDTH//4, justify="center", relief="ridge",
                 font=HEADER_FONT, readonlybackground=HEADER_BG_COLOR, fg=HEADER_TEXT_COLOR,
                     borderwidth=5, highlightthickness=2, highlightbackground="black"
             )
@@ -164,6 +164,10 @@ class GridView:
             entry.config(state="normal")
             entry.delete(0, tk.END)
             display = arithmetic_function(value, gridView=self)
+            #Todo
+            # fix loading csv with functions
+            if "Error" in display:
+                display = "#NAME?"
             self.cells[row][col].set_display_value(display)
             print(f"Displaying Cell({row}, {col}) to '{display}'")
             entry.insert(0, display)
