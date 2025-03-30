@@ -35,7 +35,8 @@ class GridView:
         for col in range(self.cols):
             header = tk.Entry(
                 self.frame, width=CELL_WIDTH, justify="center", relief="ridge",
-                font=HEADER_FONT, readonlybackground=HEADER_BG_COLOR, fg=HEADER_TEXT_COLOR
+                font=HEADER_FONT, readonlybackground=HEADER_BG_COLOR, fg=HEADER_TEXT_COLOR,
+                    borderwidth=5, highlightthickness=2, highlightbackground="black"
             )
             header.insert(0, chr(65 + col))
             header.config(state="readonly")
@@ -45,7 +46,8 @@ class GridView:
         for row in range(self.rows):
             header = tk.Entry(
                 self.frame, width=CELL_WIDTH, justify="center", relief="ridge",
-                font=HEADER_FONT, readonlybackground=HEADER_BG_COLOR, fg=HEADER_TEXT_COLOR
+                font=HEADER_FONT, readonlybackground=HEADER_BG_COLOR, fg=HEADER_TEXT_COLOR,
+                    borderwidth=5, highlightthickness=2, highlightbackground="black"
             )
             header.insert(0, str(row + 1))
             header.config(state="readonly")

@@ -19,15 +19,15 @@ from ui.grid_view import GridView
 # - [X] Load spreadsheet from a CSV file.
 
 #TODO: Menu Bar:
-# - [ ] Create a basic menu with Save, Load, and Exit options.
+# - [X] Create a basic menu with Save, Load, and Exit options.
 
 #TODO: Testing:
 # - [x] Unit tests for UI support functions (like color conversion).
-# - [ ] Manual testing for navigation and editing.
+# - [X] Manual testing for navigation and editing.
 
 #TODO: CI/CD Integration:
-# - [ ] Set up automated testing pipeline with GitHub Actions.
-# - [ ] Implement basic linting for code consistency.
+# - [X] Set up automated testing pipeline with GitHub Actions.
+# - [X] Implement basic linting for code consistency.
 
 
 def main():
