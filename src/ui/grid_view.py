@@ -89,11 +89,11 @@ class GridView:
         self.selected_entry = self.frame.grid_slaves(row=row + 1, column=col + 1)[0]
 
         # Make the Entry appear as a label by temporarily disabling it
-        self.selected_entry.config(highlightbackground=FLASH_COLOR_2, highlightcolor=FLASH_COLOR_2, relief="ridge",
+        self.selected_entry.config(highlightbackground=FLASH_COLOR_1, highlightcolor=FLASH_COLOR_1, relief="ridge",
                                    borderwidth=1, state="readonly", readonlybackground="white")
 
         # Print the selected cell and value
-        print(f"Selected Cell({row}, {col}) with value: '{self.cells[row][col].get_display_value()}'")
+        print(f"Selected Cell({row}, {col}) with value: '{self.cells[row][col].get_value()}' and display value: '{self.cells[row][col].get_display_value()}'")
         self.flash_border()
 
     def flash_border(self):
@@ -159,8 +159,9 @@ class GridView:
 
     def update_cell(self, row, col, value):
         self.cells[row][col].set_value(value)
+        entry = self.frame.grid_slaves(row=self.active_entry[0] + 1, column=self.active_entry[1] + 1)[0]
         if check_function(value):
-            entry = self.frame.grid_slaves(row=self.active_entry[0] + 1, column=self.active_entry[1] + 1)[0]
+            print(f"Value: {value}")
             entry.config(state="normal")
             entry.delete(0, tk.END)
             display = arithmetic_function(value, gridView=self)
@@ -171,10 +172,15 @@ class GridView:
             self.cells[row][col].set_display_value(display)
             print(f"Displaying Cell({row}, {col}) to '{display}'")
             entry.insert(0, display)
+            entry.config(state="normal")
 
         else:
             print(f"not a function, displaying '{value}'")
             self.cells[row][col].set_display_value(value)
+            entry.config(state="normal")
+            entry.delete(0, tk.END)
+            entry.insert(0, value)
+            entry.config(state="normal")
 
     def get_cell_value(self, row, col):
         """Return the value of the cell at the given row and column."""
