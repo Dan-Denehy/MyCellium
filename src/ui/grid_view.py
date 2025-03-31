@@ -1,6 +1,6 @@
 import tkinter as tk
 from core.cell import Cell
-from config.settings import HEADER_BG_COLOR, HEADER_TEXT_COLOR, CELL_FONT, HEADER_FONT, CELL_WIDTH
+from config.settings import HEADER_BG_COLOR, HEADER_TEXT_COLOR, CELL_FONT, HEADER_FONT, CELL_WIDTH, FLASH_COLOR_1, FLASH_COLOR_2, CELL_FONT, HEADER_FONT, CELL_WIDTH
 from ui.menu import copy_content, cut_content, paste_content
 from core.formula_parser import *
 
@@ -8,8 +8,7 @@ from core.formula_parser import *
 
 
 # Flashing border colors
-FLASH_COLOR_1 = "#AE99C0"  # Light purple
-FLASH_COLOR_2 = "black"    # Black
+
 
 class GridView:
     def __init__(self, root, rows=10, cols=10):
@@ -89,7 +88,7 @@ class GridView:
         self.selected_entry = self.frame.grid_slaves(row=row + 1, column=col + 1)[0]
 
         # Make the Entry appear as a label by temporarily disabling it
-        self.selected_entry.config(highlightbackground=FLASH_COLOR_1, highlightcolor=FLASH_COLOR_1, relief="ridge",
+        self.selected_entry.config(highlightbackground=FLASH_COLOR_2, highlightcolor=FLASH_COLOR_2, relief="ridge",
                                    borderwidth=1, state="readonly", readonlybackground="white")
 
         # Print the selected cell and value
@@ -138,7 +137,7 @@ class GridView:
 
                 # Reset the border color and width to normal when losing focus
 
-                ent = tk.Entry()
+
                 current = entry_widget.get()
                 entry_widget.delete(0, tk.END)
                 self.cells[row][col].set_display_value(current)

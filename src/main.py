@@ -35,7 +35,7 @@ def main():
     root.title("MyCellium Spreadsheet App")
     root.geometry("800x600")
 
-    grid_view = GridView(root, rows=10, cols=10)
+    grid_view = GridView(root, rows=20, cols=20)
 
     # Create menu using the menu module
     create_menu(root, grid_view)

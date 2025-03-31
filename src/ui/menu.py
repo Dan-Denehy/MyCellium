@@ -1,5 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog, messagebox
+from config.settings import HEADER_BG_COLOR, HEADER_TEXT_COLOR, CELL_FONT, HEADER_FONT, CELL_WIDTH, FLASH_COLOR_1, FLASH_COLOR_2, CELL_FONT, HEADER_FONT, CELL_WIDTH
+
 
 # To store copied content for cut/copy/paste
 clipboard = ""
@@ -39,6 +41,14 @@ def load_from_csv(grid_view, filepath=None):
                     grid_view.set_active_entry(row_idx, col_idx)
                     grid_view.update_cell(row_idx, col_idx, "")
 
+                    if hasattr(grid_view, 'flash_id'):
+                        grid_view.selected_entry.after_cancel(grid_view.flash_id)
+
+                    entry_widget = grid_view.frame.grid_slaves(row=grid_view.active_entry[0] + 1,
+                                                               column=grid_view.active_entry[1] + 1)[0]
+                    entry_widget.config(highlightbackground=FLASH_COLOR_2, highlightcolor=FLASH_COLOR_2, relief="ridge",
+                                        borderwidth=1, state="readonly", readonlybackground="white")
+
             print("Grid cleared.")
 
             with open(filepath, 'r') as file:
@@ -61,6 +71,12 @@ def load_from_csv(grid_view, filepath=None):
                         if display_value == "#NAME?":
                             name_error_cells.append((row_idx, col_idx))
 
+                        if hasattr(grid_view, 'flash_id'):
+                            grid_view.selected_entry.after_cancel(grid_view.flash_id)
+
+                        entry_widget = grid_view.frame.grid_slaves(row=grid_view.active_entry[0] + 1, column=grid_view.active_entry[1] + 1)[0]
+                        entry_widget.config(highlightbackground=FLASH_COLOR_2, highlightcolor=FLASH_COLOR_2, relief="ridge", borderwidth=1, state="readonly", readonlybackground="white")
+
 
                 #if display == "#NAME?" store the row and col in a list of row and cols
                 #once full sheet its printed iterate through the "#NAME?" cells
@@ -81,6 +97,12 @@ def load_from_csv(grid_view, filepath=None):
                             print(f"Resolved #NAME? at ({row_idx}, {col_idx}) to {display_value}")
                             name_error_cells.remove((row_idx, col_idx))
                             updated = True
+
+                        if hasattr(grid_view, 'flash_id'):
+                            grid_view.selected_entry.after_cancel(grid_view.flash_id)
+
+                        entry_widget = grid_view.frame.grid_slaves(row=grid_view.active_entry[0] + 1, column=grid_view.active_entry[1] + 1)[0]
+                        entry_widget.config(highlightbackground=FLASH_COLOR_2, highlightcolor=FLASH_COLOR_2, relief="ridge", borderwidth=1, state="readonly", readonlybackground="white")
 
                     # If no cells changed during the iteration, break to avoid infinite loop
                     if not updated:
