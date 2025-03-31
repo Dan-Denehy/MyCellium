@@ -25,23 +25,69 @@ def save_to_csv(grid_view):
         except Exception as e:
             print(f"Error saving file: {e}")
 
-def load_from_csv(grid_view):
-    filepath = filedialog.askopenfilename(filetypes=[("CSV Files", "*.csv")])
+
+def load_from_csv(grid_view, filepath=None):
+    # If no filepath is given, prompt the user
+    if not filepath:
+        filepath = filedialog.askopenfilename(filetypes=[("CSV Files", "*.csv")])
+
     if filepath:
         try:
-            with open(filepath, 'r') as file:
-                for row_idx, line in enumerate(file.readlines()):
-                    values = line.strip().split(',')
-                    for col_idx, value in enumerate(values):
-                        if row_idx < len(grid_view.cells) and col_idx < len(grid_view.cells[row_idx]):
-                            # Update the cell value
-                            grid_view.cells[row_idx][col_idx].set_value(value.strip())
+            # Step 1: Clear the current grid (wipe all cells)
+            for row_idx in range(len(grid_view.cells)):
+                for col_idx in range(len(grid_view.cells[row_idx])):
+                    grid_view.set_active_entry(row_idx, col_idx)
+                    grid_view.update_cell(row_idx, col_idx, "")
 
-                            # Update the actual Entry widget on the grid
-                            entry_widget = grid_view.frame.grid_slaves(row=row_idx + 1, column=col_idx + 1)
-                            if entry_widget:
-                                entry_widget[0].delete(0, tk.END)
-                                entry_widget[0].insert(0, value.strip())
+            print("Grid cleared.")
+
+            with open(filepath, 'r') as file:
+                # Read all lines from the file
+                lines = file.readlines()
+
+                name_error_cells = []
+
+                # Iterate through each line and cell in the file
+                for row_idx, line in enumerate(lines):
+                    values = line.strip().split(',')
+
+                    for col_idx, value in enumerate(values):
+                        # Update the cell value
+                        grid_view.set_active_entry(row_idx, col_idx)
+                        grid_view.update_cell(row_idx, col_idx, value)
+
+
+                        display_value = grid_view.cells[row_idx][col_idx].get_display_value()
+                        if display_value == "#NAME?":
+                            name_error_cells.append((row_idx, col_idx))
+
+
+                #if display == "#NAME?" store the row and col in a list of row and cols
+                #once full sheet its printed iterate through the "#NAME?" cells
+                #only stop when either no more "#NAME?" cells exist or a full iteration went through without any changing display value
+
+                # Iteratively resolve #NAME? cells
+                while name_error_cells:
+                    updated = False
+                    for row_idx, col_idx in name_error_cells[:]:
+                        # Recalculate the cell
+                        grid_view.set_active_entry(row_idx, col_idx)
+                        grid_view.update_cell(row_idx, col_idx,
+                                              grid_view.cells[row_idx][col_idx].get_value())
+                        display_value = grid_view.cells[row_idx][col_idx].get_display_value()
+
+                        # Check if the display value changed from #NAME?
+                        if display_value != "#NAME?":
+                            print(f"Resolved #NAME? at ({row_idx}, {col_idx}) to {display_value}")
+                            name_error_cells.remove((row_idx, col_idx))
+                            updated = True
+
+                    # If no cells changed during the iteration, break to avoid infinite loop
+                    if not updated:
+                        print("No more changes detected. Stopping.")
+                        break
+
+
             print(f"Loaded from {filepath}")
         except Exception as e:
             print(f"Error loading file: {e}")
