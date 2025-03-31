@@ -33,6 +33,14 @@ def load_from_csv(grid_view, filepath=None):
 
     if filepath:
         try:
+            # Step 1: Clear the current grid (wipe all cells)
+            for row_idx in range(len(grid_view.cells)):
+                for col_idx in range(len(grid_view.cells[row_idx])):
+                    grid_view.set_active_entry(row_idx, col_idx)
+                    grid_view.update_cell(row_idx, col_idx, "")
+
+            print("Grid cleared.")
+
             with open(filepath, 'r') as file:
                 # Read all lines from the file
                 lines = file.readlines()
@@ -46,7 +54,6 @@ def load_from_csv(grid_view, filepath=None):
                     for col_idx, value in enumerate(values):
                         # Update the cell value
                         grid_view.set_active_entry(row_idx, col_idx)
-                        grid_view.update_cell(row_idx, col_idx, "")
                         grid_view.update_cell(row_idx, col_idx, value)
 
 

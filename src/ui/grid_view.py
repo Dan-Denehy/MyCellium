@@ -168,7 +168,11 @@ class GridView:
             #Todo
             # fix loading csv with functions
             if isinstance(display, str):
-                display = "#NAME?"
+                print(f"ERROR: {display}")
+                if display == "Error: division by zero":
+                    display = "#DIV/0!"
+                else:
+                    display = "#NAME?"
             self.cells[row][col].set_display_value(display)
             print(f"Displaying Cell({row}, {col}) to '{display}'")
             entry.insert(0, display)
